@@ -81,36 +81,35 @@ export default class Widget {
         if (!document.querySelector('.container')) {
             const container = document.createElement('div');
             container.classList.add('container');
-
-            container.innerHTML = `<section class="chat-users"></section>
-            <section class="chat">
-             <div class="chat-content"></div>
-                       <form class="chat-form">
-                    <input class="input chat-form-input" type="text" aria-label="Ваше сообщение" name="message" placeholder="Напишите сообщение" required>
-                </form>
-            </section>`;
-
+            container.innerHTML = `
+      <section class="chat-users"></section>
+      <section class="chat">
+        <div class="chat-content"></div>
+        <form class="chat-form">
+          <input class="input chat-form-input" type="text" aria-label="Ваше сообщение" name="message" placeholder="Напишите сообщение" required>
+        </form>
+      </section>
+    `;
             this.container.appendChild(container);
-            const chatForm = container.querySelector('.chat-form');
+
+            const chatForm = container.querySelector('.chat-form'); // Объявляем переменную chatForm
 
             // Ввод сообщения
             chatForm.addEventListener('submit', (e) => {
                 e.preventDefault();
                 const message = chatForm.message.value;
-                const time = `${new Date().toLocaleDateString()} ${new Date().toLocaleTimeString().slice(0, -3)}`;
+                const time = new Date().toLocaleString()
                 this.ws.send(JSON.stringify({
                     type: 'message',
                     data: {
                         name: this.currentUser,
                         message,
-                        time,
+                        time
                     },
                 }));
-
                 chatForm.message.value = '';
             });
         }
-
         this.showUsers();
     }
 
@@ -118,29 +117,19 @@ export default class Widget {
     showUsers() {
         const users = document.querySelector('.chat-users');
 
-
         users.innerHTML = `<main class="chat-page"> 
-            <article class = "chat-list"> 
                 <ul class="users">
-                    <li class="user"><img src="//1673978368_flomaster-club-p-risunok-beseda-vkontakte-8.jpg" class="user_image" alt="">
+                    <li class="user"><img class="user-image" alt="">
                     <span class="name">${this.currentUser.name}</span>
                     </li> 
-                    <li class="user"><img src="//1673978368_flomaster-club-p-risunok-beseda-vkontakte-8.jpg" class="user_image" alt="">
-                    <span class="name">${this.currentUser.name}</span>
-                    </li>
-                    <li class="user"><img src="//1673978368_flomaster-club-p-risunok-beseda-vkontakte-8.jpg" class="user_image" alt="">
-                    <span class="name">${this.currentUser.name}</span>
-                    </li> 
-                    <li class="user"><img src="//1673978368_flomaster-club-p-risunok-beseda-vkontakte-8.jpg" class="user_image" alt="">
-                    <span class="name">${this.currentUser.name}</span>
-                    </li>
-            </ul> 
-            </article>`
+                </ul> 
+        `
 
         this.usersOnline.forEach((user) => {
             const userItem = document.createElement('li')
             userItem.classList.add('user');
-            userItem.innerHTML = `<img src="//1673978368_flomaster-club-p-risunok-beseda-vkontakte-8.jpg" class="user_image" alt="">
+
+            userItem.innerHTML = `<img class="user-image" alt="">
                         <span class="name">${user.name}</span>`;
 
             const userName = document.createElement('div');
@@ -159,13 +148,14 @@ export default class Widget {
     createMessage(data) {
         const newMes = document.createElement('div');
         newMes.classList.add('chat-message');
+        newMes.innerHTML = `<div class="mes-top">
+        <span class="chat-message-name">${data.name.name}</span>
+        <span class="chat-message-time">${data.time}</span>
+            </div>
+        <div class="chat-message">${data.message}</div>`
 
-        newMes.innerHTML = ` <div class="mes-top"><span class="chat-message-name"></span>
-            <span class="chat-message-time">${data.time}</span></div>
-            <div class="chat-mes-content">${data.message}</div>`;
 
         const userChatName = newMes.querySelector('.chat-message-name');
-
         if (data.name === this.currentUser) {
             userChatName.textContent = 'You';
             newMes.classList.add('you-mes');
@@ -179,8 +169,10 @@ export default class Widget {
 
     // Добавление сообщения в чат
     showNewMess(data) {
-
-        const message = this.createMessage(data);
-        this.container.querySelector('.chat-content').appendChild(message);
+        const message = this.createMessage(data)
+        this.ws = (e) => {
+            message.onmessage(e)
+        };
+        this.container.querySelector('.chat-content').appendChild(message)
     }
 }

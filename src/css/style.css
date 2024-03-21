@@ -44,10 +44,10 @@
 
 .chat-users {
     width: 200px;
+
     background-color: #ffffff;
     border: 2px solid #bfcad3;
     padding: 20px;
-    box-sizing: border-box;
     margin-top: 30px;
     margin-left: 20px;
     margin-bottom: 100px;
@@ -96,17 +96,10 @@
     min-height: 500px;
 }
 
-
-.chat-list {
-    border: 2px solid grey;
-    width: 30%;
-    border-radius: 20px;
-    margin-top: 5%;
-    margin-left: 3%;
-    height: 40%;
-}
-
 .users {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
     list-style-type: none;
 }
 
@@ -115,4 +108,38 @@
 }
 .user-name {
     color: green;
+}
+.user-image{
+    background-image: url("https://img.icons8.com/ios/50/user--v1.png");
+    object-fit: cover;
+    width: 45px;
+    height: 45px;
+}
+
+.chat-message {
+    margin-bottom: 10px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    background-color: #f5f5f5;
+}
+.mes-top {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 5px;
+}
+
+.chat-message-name {
+    font-weight: bold;
+}
+
+.chat-message-time {
+    color: #999;
+}
+
+.chat-mes-content {
+    margin-bottom: 5px;
+}
+
+.you-mes {
+    background-color: #d6eaf8;
 }
